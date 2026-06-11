@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Back chat bubble -->
+  <path
+    d="M60 78
+       C60 58 76 42 96 42
+       H138
+       C158 42 174 58 174 78
+       V142
+       C174 162 158 178 138 178
+       H96
+       L68 202
+       C63 206 56 202 56 195
+       V178
+       C44 172 36 160 36 146
+       V102
+       C36 88 46 78 60 78Z"
+    fill="white"
+    stroke="black"
+    stroke-width="10"
+    stroke-linejoin="round"
+  />
+
+  <!-- Front chat bubble -->
+  <path
+    d="M110 34
+       H196
+       C220 34 238 52 238 76
+       V138
+       C238 162 220 180 196 180
+       H172
+       L150 202
+       C145 207 136 203 136 196
+       V180
+       H110
+       C86 180 68 162 68 138
+       V76
+       C68 52 86 34 110 34Z"
+    fill="black"
+  />
+
+  <!-- Message lines -->
+  <rect x="118" y="76" width="70" height="16" rx="8" fill="white"/>
+  <rect x="118" y="108" width="46" height="16" rx="8" fill="white"/>
+</svg>

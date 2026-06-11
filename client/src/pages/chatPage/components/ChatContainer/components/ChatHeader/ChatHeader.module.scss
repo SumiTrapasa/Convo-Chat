@@ -1,0 +1,11 @@
+.chatHeader {
+  width: $full-height-width;
+  height: $header-height;
+  padding-inline: $gap-16;
+  background-color: $light-secondary;
+  border-top-right-radius: $border-radius-24;
+}
+
+.username {
+  font-size: $font-size-16;
+}

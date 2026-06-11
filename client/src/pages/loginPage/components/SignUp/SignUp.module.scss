@@ -1,0 +1,22 @@
+.loginContent {
+  height: $full-height-width;
+}
+
+.subtitle {
+  text-align: center;
+  width: 80%;
+}
+
+.loginForm {
+  width: 60% !important;
+}
+
+.forgotLink {
+  margin-top: -$gap-16;
+  width: $full-height-width;
+  text-align: end;
+}
+
+.registerLink {
+  color: $black !important;
+}

@@ -1,0 +1,45 @@
+$container-padding-horizontal: 10%;
+$layout-height: 80%;
+
+.flexContainer {
+  height: $calc-height;
+  padding-left: $container-padding-horizontal;
+  padding-right: $container-padding-horizontal;
+}
+
+.chatPageLayout {
+  height: $layout-height;
+  border-radius: $border-radius-24;
+}
+
+.chatPageSidebar {
+  background-color: $primary-color !important;
+  border-top-left-radius: $border-radius-24;
+  border-bottom-left-radius: $border-radius-24;
+}
+
+.SidebarContainer {
+  margin: $gap-24;
+  height: 90%;
+}
+
+.chatPageContent,
+.noContent {
+  height: 100%;
+}
+
+.chatPageContent {
+  min-width: 0;
+}
+
+@media (max-width: $breakpoint-md) {
+  .flexContainer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .chatPageLayout {
+    height: $full-height-width;
+    border-radius: 0;
+  }
+}

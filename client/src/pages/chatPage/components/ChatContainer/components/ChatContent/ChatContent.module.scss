@@ -1,0 +1,77 @@
+$date-bg: rgba(0, 0, 0, 0.05);
+$date-text: rgba(0, 0, 0, 0.45);
+$time-text: rgba(255, 255, 255, 0.7);
+$msg-padding: 10px 14px;
+$message-max-width: 70%;
+$image-max-width: 250px;
+$time-font-size: 11px;
+
+.chatContent {
+  width: $full-height-width;
+  padding: $gap-16;
+}
+
+.messageContainer {
+  max-width: $message-max-width;
+}
+
+.message {
+  padding: $msg-padding;
+  border-radius: $border-radius-16;
+  border-bottom-left-radius: 0;
+  color: $white;
+  background: $chat-bubble-other;
+}
+
+.mine {
+  padding: $msg-padding;
+  border-radius: $border-radius-16;
+  border-bottom-right-radius: 0;
+  color: $white;
+  background: $chat-bubble-mine;
+}
+
+.messageEnd {
+  padding-bottom: $gap-8;
+}
+
+.image {
+  max-width: $image-max-width;
+  border-radius: $border-radius-8;
+}
+
+.text {
+  color: $white;
+  white-space: pre-wrap;
+  margin-top: $gap-8;
+  font-size: $font-size-16;
+}
+
+.jumboEmoji {
+  font-size: $font-size-32 !important;
+  line-height: 1.2;
+}
+
+.time {
+  color: $time-text;
+  font-size: $time-font-size;
+  margin-top: $gap-4;
+  align-self: flex-end;
+}
+
+.noContent {
+  flex: 1;
+}
+
+.dateSeparator {
+  margin-block: $gap-16;
+  width: $full-height-width;
+}
+
+.dateLabel {
+  background: $date-bg;
+  color: $date-text;
+  padding: $gap-4 $gap-16;
+  border-radius: $border-radius-8;
+  font-size: $font-size-12;
+}

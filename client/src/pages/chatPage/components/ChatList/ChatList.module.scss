@@ -1,0 +1,30 @@
+$tab-margin: 10px;
+$scrollbar-hover-width: 8px;
+
+.tab :global(.ant-radio-button-wrapper-block) {
+  margin-inline: $tab-margin;
+  border-radius: $border-radius-12;
+}
+
+.chatList {
+  border-radius: $border-radius-16;
+}
+
+.scrollContainer {
+  overflow-y: auto;
+  border-radius: $border-radius-16;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    transition: width 0.2s ease;
+  }
+
+  &:hover::-webkit-scrollbar {
+    width: $scrollbar-hover-width;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $light-secondary;
+    border-radius: 999px;
+  }
+}

@@ -1,0 +1,42 @@
+$preview-size: 100px;
+
+.chatInput {
+  width: $full-height-width;
+  min-height: $header-height;
+  padding: $gap-16;
+  background-color: $light-secondary;
+  border-bottom-right-radius: $border-radius-24;
+}
+
+.chatFlexInput {
+  flex: 1;
+}
+
+.fileInput {
+  display: none;
+}
+
+.imagePreview {
+  position: relative;
+  height: $preview-size;
+  width: $preview-size;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.closeIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.emojiButton {
+  font-size: $font-size-18;
+  padding-inline: $gap-4;
+}
+
+.inputField {
+  font-size: $font-size-18;
+}

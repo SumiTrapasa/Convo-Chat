@@ -1,0 +1,12 @@
+.chatCard :global(.ant-card-body) {
+  padding: 0 !important;
+  margin: $gap-12;
+}
+
+.avatar {
+  margin-right: $gap-12;
+}
+
+.chatCard {
+  border-radius: 0;
+}
