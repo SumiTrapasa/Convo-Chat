@@ -6,6 +6,7 @@ import { CloseOutlined, SendOutlined, UploadOutlined } from "@ant-design/icons";
 import { useChatStore } from "@/store/useChatStore";
 import { message } from "antd";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
+import { useSendMessage } from "@/hooks/useChat";
 import { fileToBase64 } from "@/utils/file";
 
 const ChatInput = () => {
@@ -15,7 +16,8 @@ const ChatInput = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { sendMessage, isSoundEnabled } = useChatStore();
+  const { selectedUser, isSoundEnabled } = useChatStore();
+  const { mutate: sendMessage } = useSendMessage(selectedUser?._id || "");
 
   const handleSendMessage = () => {
     if (!text.trim() && !imageFile) return;

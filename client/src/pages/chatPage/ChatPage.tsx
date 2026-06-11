@@ -1,5 +1,5 @@
 import { Layout, Flex, Divider } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./ChatPage.module.scss";
 
 import ProfileHeader from "./components/ProfileHeader/ProfileHeader";
@@ -15,6 +15,12 @@ export default function ChatPage() {
   const { selectedUser } = useChatStore();
   const [collapsed, setCollapsed] = useState(false);
   const isMobile = window.innerWidth <= 768;
+
+  useEffect(() => {
+    if (isMobile) {
+      setCollapsed(false);
+    }
+  }, [isMobile]);
 
   return (
     <Flex align="center" justify="center" className={styles.flexContainer}>

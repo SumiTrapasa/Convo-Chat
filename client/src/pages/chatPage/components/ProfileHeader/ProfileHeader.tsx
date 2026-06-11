@@ -19,11 +19,14 @@ import React, { useRef, useState } from "react";
 import ProfilePicture from "@/components/ProfilePicture/ProfilePicture";
 import { useChatStore } from "@/store/useChatStore";
 import { fileToBase64 } from "@/utils/file";
-
-const mouseClickSound = new Audio("/sounds/mouse-click.mp3");
+import { useLogout, useUpdateProfile } from "@/hooks/useAuth";
+import { MOUSE_CLICK_SOUND } from "@/const/audio";
 
 const ProfileHeader = () => {
-  const { logout, authUser, updateProfile } = useAuthStore();
+  const { authUser } = useAuthStore();
+  const { mutate: logout } = useLogout();
+  const { mutate: updateProfile } = useUpdateProfile();
+
   const [selectedImg, setSelectedImg] = useState<string | null>(null);
   const { isSoundEnabled, toggleSound } = useChatStore();
 
@@ -68,10 +71,10 @@ const ProfileHeader = () => {
             className={styles.linkButton}
             onClick={() => {
               // play click sound before toggling
-              mouseClickSound.currentTime = 0; // reset to start
-              mouseClickSound
-                .play()
-                .catch((error) => console.log("Audio play failed:", error));
+              MOUSE_CLICK_SOUND.currentTime = 0; // reset to start
+              MOUSE_CLICK_SOUND.play().catch((error) =>
+                console.log("Audio play failed:", error),
+              );
               toggleSound();
             }}
           >
@@ -87,7 +90,11 @@ const ProfileHeader = () => {
     {
       key: "3",
       label: (
-        <Button type="link" className={styles.linkButton} onClick={logout}>
+        <Button
+          type="link"
+          className={styles.linkButton}
+          onClick={() => logout()}
+        >
           Logout
         </Button>
       ),
@@ -114,7 +121,9 @@ const ProfileHeader = () => {
       </Flex>
 
       <Dropdown menu={{ items }}>
-        <MenuOutlined className={styles.logoutIcon} />
+        <Button type="text">
+          <MenuOutlined className={styles.logoutIcon} />
+        </Button>
       </Dropdown>
       <input
         type="file"

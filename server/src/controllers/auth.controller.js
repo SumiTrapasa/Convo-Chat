@@ -6,7 +6,7 @@ import { ENV } from "../lib/env.js";
 import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
-  const { fullName, email, password, isSendEmail } = req.body;
+  const { fullName, email, password } = req.body;
 
   try {
     if (!fullName || !email || !password) {
@@ -48,16 +48,14 @@ export const signup = async (req, res) => {
         profilePic: newUser.profilePic,
       });
 
-      if (isSendEmail) {
-        try {
-          await sendWelcomeEmail(
-            savedUser.email,
-            savedUser.fullName,
-            ENV.CLIENT_URL,
-          );
-        } catch (error) {
-          console.error("Failed to send welcome email:", error);
-        }
+      try {
+        await sendWelcomeEmail(
+          savedUser.email,
+          savedUser.fullName,
+          ENV.CLIENT_URL,
+        );
+      } catch (error) {
+        console.error("Failed to send welcome email:", error);
       }
     } else {
       res.status(400).json({ message: "Invalid user data" });

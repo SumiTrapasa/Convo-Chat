@@ -1,15 +1,9 @@
-// audio setup
-const keyStrokeSounds = [
-  new Audio("/sounds/keystroke1.mp3"),
-  new Audio("/sounds/keystroke2.mp3"),
-  new Audio("/sounds/keystroke3.mp3"),
-  new Audio("/sounds/keystroke4.mp3"),
-];
+import { KEY_STROKE_SOUNDS } from "@/const/audio";
 
 function useKeyboardSound() {
   const playRandomKeyStrokeSound = () => {
     const randomSound =
-      keyStrokeSounds[Math.floor(Math.random() * keyStrokeSounds.length)];
+      KEY_STROKE_SOUNDS[Math.floor(Math.random() * KEY_STROKE_SOUNDS.length)];
 
     randomSound.currentTime = 0; // this is for a better UX, def add this
     randomSound

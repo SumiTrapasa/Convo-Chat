@@ -1,5 +1,6 @@
 import { BorderBeam, Button, Flex, Image, Typography } from "antd";
 import { Fragment, useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useChatStore } from "@/store/useChatStore";
 import ChatLoadingSkeleton from "../ChatSkeletonLoading/ChatSkeletonLoading";
@@ -7,47 +8,35 @@ import styles from "./ChatContent.module.scss";
 import ProfilePicture from "@/components/ProfilePicture/ProfilePicture";
 import NoChatsFound from "@/components/NoChatsFound/NoChatsFound";
 import { formatDateLabel, formatTime, isJumboEmoji } from "@/utils/chat";
-
-const COLORS = [
-  { color: "#22c55e", percent: 0 },
-  { color: "#a3e635", percent: 54 },
-  { color: "#06b6d4", percent: 57 },
-];
-
-const QUICK_MESSAGES = [
-  { label: "Say Hello 👋", text: "Hello 👋" },
-  { label: "How are you? 😊", text: "How are you? 😊" },
-  { label: "Meet up soon? 📅", text: "Meet up soon? 📅" },
-];
+import { useMessages, useSendMessage } from "@/hooks/useChat";
+import { COLORS, QUICK_MESSAGES } from "@/const/chat";
+import type { Message } from "@/types/chats";
 
 const ChatContent = () => {
-  const {
-    selectedUser,
-    getMessagesByUserId,
-    messages,
-    isMessagesLoading,
-    sendMessage,
-    subscribeToMessages,
-    unsubscribeFromMessages,
-  } = useChatStore();
+  const queryClient = useQueryClient();
+  const { selectedUser, subscribeToMessages, unsubscribeFromMessages } =
+    useChatStore();
+
+  const { data: messages = [], isLoading: isMessagesLoading } = useMessages(
+    selectedUser?._id,
+  );
+  const { mutate: sendMessage } = useSendMessage(selectedUser?._id || "");
+
   const { authUser } = useAuthStore();
   const messageEndRef = useRef<HTMLDivElement>(null);
   const { Text } = Typography;
 
   useEffect(() => {
-    if (selectedUser) {
-      getMessagesByUserId(selectedUser._id);
-    }
-    subscribeToMessages();
+    subscribeToMessages((newMessage) => {
+      queryClient.setQueryData<Message[]>(
+        ["messages", selectedUser?._id],
+        (old = []) => [...old, newMessage],
+      );
+    });
 
     // clean up
     return () => unsubscribeFromMessages();
-  }, [
-    selectedUser,
-    getMessagesByUserId,
-    subscribeToMessages,
-    unsubscribeFromMessages,
-  ]);
+  }, [selectedUser, subscribeToMessages, unsubscribeFromMessages, queryClient]);
 
   useEffect(() => {
     if (messageEndRef.current) {

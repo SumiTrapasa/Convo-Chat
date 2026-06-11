@@ -13,13 +13,13 @@ import styles from "./SignUp.module.scss";
 import Logo from "@/components/logo/Logo";
 import { ROUTES } from "@/const/common";
 import { useNavigate } from "react-router";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useSignup } from "@/hooks/useAuth";
 
 export default function SignUp() {
   const screens = Grid.useBreakpoint();
   const { Title, Text } = Typography;
   const navigate = useNavigate();
-  const { signup, isSigningUp } = useAuthStore();
+  const { mutate: signup, isPending: isSigningUp } = useSignup();
   const [form] = Form.useForm();
   const isSendEmail = Form.useWatch("isSendEmail", form);
 

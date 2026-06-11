@@ -4,13 +4,13 @@ import styles from "./Login.module.scss";
 import Logo from "@/components/logo/Logo";
 import { useNavigate } from "react-router";
 import { ROUTES } from "@/const/common";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useLogin } from "@/hooks/useAuth";
 
 export default function Login() {
   const { Title, Text } = Typography;
   const naviagte = useNavigate();
   const screens = Grid.useBreakpoint();
-  const { login, isLoggingIn } = useAuthStore();
+  const { mutate: login, isPending: isLoggingIn } = useLogin();
 
   const onFinish = (values: { email: string; password: string }) => {
     login(values);

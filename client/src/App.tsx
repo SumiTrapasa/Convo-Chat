@@ -1,46 +1,60 @@
-import { Navigate, Route, Routes } from "react-router";
-import { useEffect } from "react";
-import PageLoader from "@/components/PageLoader/PageLoader";
+import { Route, Routes } from "react-router";
 import ChatPage from "@/pages/chatPage/ChatPage";
 import LoginPage from "@/pages/loginPage/LoginPage";
-import { useAuthStore } from "@/store/useAuthStore";
 import { ROUTES } from "@/const/common";
 import { ConfigProvider } from "antd";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute/PublicRoute";
+
+const queryClient = new QueryClient();
+
+function AppRoutes() {
+  return (
+    <Routes>
+      <Route
+        path={ROUTES.HOME}
+        element={
+          <ProtectedRoute>
+            <ChatPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={ROUTES.LOGIN}
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path={ROUTES.SIGNUP}
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
+    </Routes>
+  );
+}
 
 function App() {
-  const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  if (isCheckingAuth) return <PageLoader />;
-
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          fontFamily: "'Montserrat', sans-serif",
-          colorPrimary: "black",
-          borderRadius: 10,
-        },
-      }}
-    >
-      <Routes>
-        <Route
-          path={ROUTES.HOME}
-          element={authUser ? <ChatPage /> : <Navigate to={ROUTES.LOGIN} />}
-        />
-        <Route
-          path={ROUTES.LOGIN}
-          element={!authUser ? <LoginPage /> : <Navigate to={ROUTES.HOME} />}
-        />
-        <Route
-          path={ROUTES.SIGNUP}
-          element={!authUser ? <LoginPage /> : <Navigate to={ROUTES.HOME} />}
-        />
-      </Routes>
-    </ConfigProvider>
+    <QueryClientProvider client={queryClient}>
+      <ConfigProvider
+        theme={{
+          token: {
+            fontFamily: "'Montserrat', sans-serif",
+            colorPrimary: "black",
+            borderRadius: 10,
+          },
+        }}
+      >
+        <AppRoutes />
+      </ConfigProvider>
+    </QueryClientProvider>
   );
 }
 export default App;

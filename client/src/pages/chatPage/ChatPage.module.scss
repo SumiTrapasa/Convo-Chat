@@ -10,12 +10,11 @@ $layout-height: 80%;
 .chatPageLayout {
   height: $layout-height;
   border-radius: $border-radius-24;
+  overflow: hidden;
 }
 
 .chatPageSidebar {
   background-color: $primary-color !important;
-  border-top-left-radius: $border-radius-24;
-  border-bottom-left-radius: $border-radius-24;
 }
 
 .SidebarContainer {

@@ -1,39 +1,30 @@
 import { Flex, Radio, Skeleton } from "antd";
-import type { CheckboxGroupProps } from "antd/es/checkbox";
 import styles from "./ChatList.module.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ChatCard from "@/components/ChatCard/ChatCard";
-import { useChatStore } from "@/store/useChatStore";
+import { useChatStore } from "@/store/useChatStore"; // Corrected import
 import { useAuthStore } from "@/store/useAuthStore";
 import NoChatsFound from "@/components/NoChatsFound/NoChatsFound";
-
-const options: CheckboxGroupProps<string>["options"] = [
-  { label: "Chats", value: "Chats" },
-  { label: "Contacts", value: "Contacts" },
-];
+import { useContacts, useChatPartners } from "@/hooks/useChat"; // Import React Query hooks
+import { CHAT_TABS } from "@/const/chat";
 
 const ChatList = ({ onSelect }: { onSelect: () => void }) => {
   const [active, setActive] = useState<string>("Chats");
-  const {
-    chats,
-    allContacts,
-    isUsersLoading,
-    getMyChatPartners,
-    getAllContacts,
-    setSelectedUser,
-  } = useChatStore();
+  const { setSelectedUser } = useChatStore();
   const { onlineUsers } = useAuthStore();
 
-  useEffect(() => {
-    if (active === "Chats") getMyChatPartners();
-    else getAllContacts();
-  }, [active, getMyChatPartners, getAllContacts]);
+  const { data: chats = [], isLoading: isChatsLoading } = useChatPartners();
+  const { data: allContacts = [], isLoading: isContactsLoading } =
+    useContacts();
+
+  const isUsersLoading =
+    active === "Chats" ? isChatsLoading : isContactsLoading;
 
   return (
     <Flex vertical gap={24} style={{ flex: 1, minHeight: 0 }}>
       <Radio.Group
         block
-        options={options}
+        options={CHAT_TABS}
         defaultValue="Chats"
         optionType="button"
         buttonStyle="solid"
