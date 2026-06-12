@@ -1,12 +1,18 @@
-import { Flex, Radio, Skeleton } from "antd";
+import { BorderBeam, Button, Flex, Radio, Skeleton, Tooltip } from "antd";
 import styles from "./ChatList.module.scss";
 import { useState } from "react";
 import ChatCard from "@/components/ChatCard/ChatCard";
-import { useChatStore } from "@/store/useChatStore"; // Corrected import
+import { useChatStore } from "@/store/useChatStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import NoChatsFound from "@/components/NoChatsFound/NoChatsFound";
-import { useContacts, useChatPartners } from "@/hooks/useChat"; // Import React Query hooks
-import { CHAT_TABS } from "@/const/chat";
+import { useContacts, useChatPartners } from "@/hooks/useChat";
+import {
+  CHAT_TABS,
+  AI_USER_ID,
+  AI_USER_FULL_NAME,
+  AI_USER_PROFILE_PIC,
+} from "@/const/chat";
+import { RobotOutlined } from "@ant-design/icons";
 
 const ChatList = ({ onSelect }: { onSelect: () => void }) => {
   const [active, setActive] = useState<string>("Chats");
@@ -21,7 +27,7 @@ const ChatList = ({ onSelect }: { onSelect: () => void }) => {
     active === "Chats" ? isChatsLoading : isContactsLoading;
 
   return (
-    <Flex vertical gap={24} style={{ flex: 1, minHeight: 0 }}>
+    <Flex vertical gap={24} className={styles.chatListContainer}>
       <Radio.Group
         block
         options={CHAT_TABS}
@@ -31,7 +37,6 @@ const ChatList = ({ onSelect }: { onSelect: () => void }) => {
         className={styles.tab}
         onChange={(e) => setActive(e.target.value)}
       />
-
       <Flex className={styles.scrollContainer} vertical>
         {isUsersLoading ? (
           <Flex vertical>
@@ -78,6 +83,25 @@ const ChatList = ({ onSelect }: { onSelect: () => void }) => {
           </Flex>
         )}
       </Flex>
+      <BorderBeam outset={6}>
+        <Tooltip title="Convo AI">
+          <Button
+            shape="circle"
+            type="primary"
+            size="large"
+            onClick={() => {
+              setSelectedUser({
+                _id: AI_USER_ID,
+                fullName: AI_USER_FULL_NAME,
+                profilePic: AI_USER_PROFILE_PIC,
+              });
+              onSelect();
+            }}
+            icon={<RobotOutlined />}
+            className={styles.aiButton}
+          />
+        </Tooltip>
+      </BorderBeam>
     </Flex>
   );
 };

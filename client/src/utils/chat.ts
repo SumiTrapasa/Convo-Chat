@@ -1,8 +1,16 @@
+import { AI_USER_ID } from "@/const/chat";
 /**
  * Checks if a text consists only of emojis (and whitespace) and is short.
  */
 export const isJumboEmoji = (text: string): boolean => {
   return /^(\p{Extended_Pictographic}|\s)+$/u.test(text) && text.length <= 10;
+};
+
+/**
+ * Checks if a message sender is the AI Bot.
+ */
+export const isAIMessage = (senderId: string): boolean => {
+  return senderId === AI_USER_ID;
 };
 
 /**

@@ -75,3 +75,10 @@ $time-font-size: 11px;
   border-radius: $border-radius-8;
   font-size: $font-size-12;
 }
+
+.pendingMsg {
+  color: $white;
+  :global(.ant-spin-dot-item) {
+    background: $white !important;
+  }
+}

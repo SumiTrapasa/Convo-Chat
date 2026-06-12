@@ -38,4 +38,8 @@ $preview-size: 100px;
 
 .inputField {
   font-size: $font-size-18;
+
+  &:disabled {
+    background-color: $bg-slate-100;
+  }
 }

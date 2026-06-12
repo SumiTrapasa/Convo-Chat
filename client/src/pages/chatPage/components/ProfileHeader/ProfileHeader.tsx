@@ -12,6 +12,7 @@ import {
   MenuOutlined,
   MutedOutlined,
   SoundOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import styles from "./ProfileHeader.module.scss";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -20,12 +21,14 @@ import ProfilePicture from "@/components/ProfilePicture/ProfilePicture";
 import { useChatStore } from "@/store/useChatStore";
 import { fileToBase64 } from "@/utils/file";
 import { useLogout, useUpdateProfile } from "@/hooks/useAuth";
+import { useClearAIMessages } from "@/hooks/useChat";
 import { MOUSE_CLICK_SOUND } from "@/const/audio";
 
 const ProfileHeader = () => {
   const { authUser } = useAuthStore();
   const { mutate: logout } = useLogout();
   const { mutate: updateProfile } = useUpdateProfile();
+  const { mutate: clearMessages } = useClearAIMessages();
 
   const [selectedImg, setSelectedImg] = useState<string | null>(null);
   const { isSoundEnabled, toggleSound } = useChatStore();
@@ -83,6 +86,19 @@ const ProfileHeader = () => {
         </Tooltip>
       ),
       icon: isSoundEnabled ? <SoundOutlined /> : <MutedOutlined />,
+    },
+    {
+      key: "ai-clear",
+      label: (
+        <Button
+          type="link"
+          className={styles.linkButton}
+          onClick={() => clearMessages()}
+        >
+          Clear AI History
+        </Button>
+      ),
+      icon: <DeleteOutlined />,
     },
     {
       type: "divider",

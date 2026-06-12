@@ -10,6 +10,19 @@ $scrollbar-hover-width: 8px;
   border-radius: $border-radius-16;
 }
 
+.chatListContainer {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.aiButton {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+}
+
 .scrollContainer {
   overflow-y: auto;
   border-radius: $border-radius-16;

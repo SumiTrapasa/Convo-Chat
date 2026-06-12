@@ -4,6 +4,7 @@ import { useChatStore } from "@/store/useChatStore";
 import { CloseOutlined } from "@ant-design/icons";
 import ProfilePicture from "@/components/ProfilePicture/ProfilePicture";
 import styles from "./ChatHeader.module.scss";
+import { AI_USER_FULL_NAME } from "@/const/chat";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
@@ -18,14 +19,16 @@ const ChatHeader = () => {
           size={52}
           offset={[-10, 6]}
           profilePic={selectedUser.profilePic}
-          isOnline={!!isOnline}
+          isOnline={!!isOnline || AI_USER_FULL_NAME === selectedUser?.fullName}
         />
         <Flex vertical>
           <Typography.Text strong className={styles.username}>
             {selectedUser?.fullName}
           </Typography.Text>
           <Typography.Text type="secondary">
-            {isOnline ? "Online" : "Offline"}
+            {isOnline || AI_USER_FULL_NAME === selectedUser?.fullName
+              ? "Online"
+              : "Offline"}
           </Typography.Text>
         </Flex>
       </Flex>

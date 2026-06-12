@@ -17,7 +17,9 @@ const ChatInput = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { selectedUser, isSoundEnabled } = useChatStore();
-  const { mutate: sendMessage } = useSendMessage(selectedUser?._id || "");
+  const { mutate: sendMessage, isPending } = useSendMessage(
+    selectedUser?._id || "",
+  );
 
   const handleSendMessage = () => {
     if (!text.trim() && !imageFile) return;
@@ -114,7 +116,10 @@ const ChatInput = () => {
               playRandomKeyStrokeSound();
             }
           }}
-          placeholder="Type a message..."
+          placeholder={
+            isPending ? "Convo AI is thinking..." : "Type a message..."
+          }
+          disabled={isPending}
           onPressEnter={handleSendMessage}
           className={styles.inputField}
           size="large"

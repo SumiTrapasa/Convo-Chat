@@ -16,3 +16,8 @@ export const CHAT_TABS: CheckboxGroupProps<string>["options"] = [
   { label: "Chats", value: "Chats" },
   { label: "Contacts", value: "Contacts" },
 ];
+
+// AI Chat Constants
+export const AI_USER_ID = "ai-convo-bot-id";
+export const AI_USER_FULL_NAME = "Convo AI";
+export const AI_USER_PROFILE_PIC = "/ai_avatar.png";

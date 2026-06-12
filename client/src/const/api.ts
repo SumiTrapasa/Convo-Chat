@@ -12,4 +12,9 @@ export const API_ENDPOINTS = {
     CONTACTS: "/messages/contacts",
     CHATS: "/messages/chats",
   },
+  AI: {
+    GET_MESSAGES: "/ai/messages",
+    SEND_MESSAGE: "/ai/chat",
+    CLEAR_MESSAGES: "/ai/messages",
+  },
 };
