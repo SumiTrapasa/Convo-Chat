@@ -1,3 +1,5 @@
+import type { CallMessageStatus, CallType, MessageType } from "./call";
+
 export interface User {
   _id: string;
   fullName: string;
@@ -18,6 +20,14 @@ export interface Message {
   receiverId: string;
   text?: string;
   image?: string;
+  messageType?: MessageType;
+  call?: {
+    callType: CallType;
+    status: CallMessageStatus;
+    startedAt?: string;
+    endedAt?: string;
+    durationSeconds?: number;
+  };
   createdAt: string;
   isOptimistic?: boolean;
 }

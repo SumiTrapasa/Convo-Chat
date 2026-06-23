@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { useAuthStore } from "./useAuthStore";
 import type { Contact, ChatPartner, Message } from "@/types/chats";
 import { NOTIFICATION_SOUND } from "@/const/audio";
+import { CALL_SOCKET_EVENTS } from "@/const/call";
 
 interface ChatState {
   activeTab: string;
@@ -40,27 +41,35 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     const socket = useAuthStore.getState().socket;
     if (!socket) return;
 
-    socket.on("newMessage", (newMessage: Message) => {
+    socket.on(CALL_SOCKET_EVENTS.NEW_MESSAGE, (newMessage: Message) => {
       const { selectedUser, isSoundEnabled } = get();
       if (!selectedUser) return;
 
-      const isMessageSentFromSelectedUser =
-        newMessage.senderId === selectedUser._id;
-      if (!isMessageSentFromSelectedUser) return;
+      const authUser = useAuthStore.getState().authUser;
+      const senderId = newMessage.senderId;
+      const receiverId = newMessage.receiverId;
+      const selectedUserId = selectedUser._id;
+      const authUserId = authUser?._id;
 
-      onMessage(newMessage);
-
-      if (isSoundEnabled) {
+      if (isSoundEnabled && receiverId === authUserId) {
         NOTIFICATION_SOUND.currentTime = 0;
         NOTIFICATION_SOUND.play().catch((e) =>
           console.log("Audio play failed:", e),
         );
       }
+
+      const isCurrentConversation =
+        (senderId === selectedUserId && receiverId === authUserId) ||
+        (senderId === authUserId && receiverId === selectedUserId);
+
+      if (!isCurrentConversation) return;
+
+      onMessage(newMessage);
     });
   },
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
-    socket?.off("newMessage");
+    socket?.off(CALL_SOCKET_EVENTS.NEW_MESSAGE);
   },
 }));

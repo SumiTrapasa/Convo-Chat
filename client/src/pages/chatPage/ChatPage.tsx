@@ -8,11 +8,21 @@ import ChatContainer from "./components/ChatContainer/ChatContainer";
 import NoChatsFound from "@/components/NoChatsFound/NoChatsFound";
 
 import { useChatStore } from "@/store/useChatStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useCallStore } from "@/store/useCallStore";
+import VideoCallOverlay from "./components/VideoCallOverlay/VideoCallOverlay";
 
 const { Sider, Content } = Layout;
 
 export default function ChatPage() {
   const { selectedUser } = useChatStore();
+  const socket = useAuthStore((state) => state.socket);
+  const initializeSocketListeners = useCallStore(
+    (state) => state.initializeSocketListeners,
+  );
+  const cleanupSocketListeners = useCallStore(
+    (state) => state.cleanupSocketListeners,
+  );
   const [collapsed, setCollapsed] = useState(false);
   const isMobile = window.innerWidth <= 768;
 
@@ -21,6 +31,11 @@ export default function ChatPage() {
       setCollapsed(false);
     }
   }, [isMobile]);
+
+  useEffect(() => {
+    initializeSocketListeners();
+    return () => cleanupSocketListeners();
+  }, [socket, initializeSocketListeners, cleanupSocketListeners]);
 
   return (
     <Flex align="center" justify="center" className={styles.flexContainer}>
@@ -64,6 +79,7 @@ export default function ChatPage() {
           ) : null}
         </Content>
       </Layout>
+      <VideoCallOverlay />
     </Flex>
   );
 }

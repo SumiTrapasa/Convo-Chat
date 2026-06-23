@@ -1,4 +1,5 @@
 import { BorderBeam, Button, Flex, Image, Typography, Spin } from "antd";
+import { VideoCameraOutlined } from "@ant-design/icons";
 import { Fragment, useEffect, useRef } from "react";
 import { useIsMutating, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -21,7 +22,9 @@ import {
   AI_USER_FULL_NAME,
   AI_USER_PROFILE_PIC,
 } from "@/const/chat";
+import { MESSAGE_TYPE } from "@/const/call";
 import type { Message } from "@/types/chats";
+import { getCallLabel } from "@/utils/video";
 
 const ChatContent = () => {
   const queryClient = useQueryClient();
@@ -117,45 +120,62 @@ const ChatContent = () => {
               </Flex>
             )}
 
-            <Flex justify={isMine ? "flex-end" : "flex-start"}>
-              <Flex align="end" gap={8} className={styles.messageContainer}>
-                {!isMine && (
-                  <ProfilePicture
-                    size={30}
-                    profilePic={
-                      isAIMessage
-                        ? AI_USER_PROFILE_PIC
-                        : selectedUser?.profilePic
-                    }
-                  />
-                )}
-
-                <Flex
-                  vertical
-                  className={!isMine ? styles.message : styles.mine}
-                >
-                  {msg.image && (
-                    <Image src={msg.image} preview className={styles.image} />
-                  )}
-
-                  {msg.text && (
-                    <Text
-                      className={`${styles.text} ${isJumboEmoji(msg.text) ? styles.jumboEmoji : ""}`}
-                    >
-                      {msg.text}
-                    </Text>
-                  )}
-
-                  <Text className={styles.time}>
+            {msg.messageType === MESSAGE_TYPE.CALL ? (
+              <Flex justify="center">
+                <Flex align="center" gap={8} className={styles.callEvent}>
+                  <VideoCameraOutlined />
+                  <Text className={styles.callEventText}>
+                    {getCallLabel(msg, isMine)}
+                  </Text>
+                  <Text className={styles.callEventTime}>
                     {formatTime(msg.createdAt)}
                   </Text>
                 </Flex>
-
-                {isMine && (
-                  <ProfilePicture size={30} profilePic={authUser?.profilePic} />
-                )}
               </Flex>
-            </Flex>
+            ) : (
+              <Flex justify={isMine ? "flex-end" : "flex-start"}>
+                <Flex align="end" gap={8} className={styles.messageContainer}>
+                  {!isMine && (
+                    <ProfilePicture
+                      size={30}
+                      profilePic={
+                        isAIMessage
+                          ? AI_USER_PROFILE_PIC
+                          : selectedUser?.profilePic
+                      }
+                    />
+                  )}
+
+                  <Flex
+                    vertical
+                    className={!isMine ? styles.message : styles.mine}
+                  >
+                    {msg.image && (
+                      <Image src={msg.image} preview className={styles.image} />
+                    )}
+
+                    {msg.text && (
+                      <Text
+                        className={`${styles.text} ${isJumboEmoji(msg.text) ? styles.jumboEmoji : ""}`}
+                      >
+                        {msg.text}
+                      </Text>
+                    )}
+
+                    <Text className={styles.time}>
+                      {formatTime(msg.createdAt)}
+                    </Text>
+                  </Flex>
+
+                  {isMine && (
+                    <ProfilePicture
+                      size={30}
+                      profilePic={authUser?.profilePic}
+                    />
+                  )}
+                </Flex>
+              </Flex>
+            )}
           </Fragment>
         );
       })}

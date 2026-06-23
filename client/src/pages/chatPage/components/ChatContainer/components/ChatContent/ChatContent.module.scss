@@ -82,3 +82,26 @@ $time-font-size: 11px;
     background: $white !important;
   }
 }
+
+.callEventWrapper {
+  width: $full-height-width;
+  margin-block: $gap-4;
+}
+
+.callEvent {
+  max-width: min(420px, 92%);
+  padding: $gap-8 $gap-12;
+  border-radius: $border-radius-8;
+  color: $text-secondary;
+  background: $bg-secondary;
+}
+
+.callEventText {
+  color: $text-secondary;
+  font-size: $font-size-14;
+}
+
+.callEventTime {
+  color: $date-text;
+  font-size: $time-font-size;
+}

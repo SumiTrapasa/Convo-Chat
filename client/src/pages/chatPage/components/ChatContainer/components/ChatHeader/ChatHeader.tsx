@@ -1,15 +1,23 @@
-import { Button, Flex, Typography } from "antd";
+import { Button, Flex, Tooltip, Typography } from "antd";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useChatStore } from "@/store/useChatStore";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined, VideoCameraOutlined } from "@ant-design/icons";
 import ProfilePicture from "@/components/ProfilePicture/ProfilePicture";
 import styles from "./ChatHeader.module.scss";
 import { AI_USER_FULL_NAME } from "@/const/chat";
+import { useCallStore } from "@/store/useCallStore";
+import { CALL_STATUS } from "@/const/call";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
   const { onlineUsers } = useAuthStore();
+  const { status, startCall } = useCallStore();
   const isOnline = selectedUser && onlineUsers.includes(selectedUser._id);
+  const canCall =
+    selectedUser &&
+    selectedUser.fullName !== AI_USER_FULL_NAME &&
+    status === CALL_STATUS.IDLE;
+
   if (!selectedUser) return null;
 
   return (
@@ -32,11 +40,23 @@ const ChatHeader = () => {
           </Typography.Text>
         </Flex>
       </Flex>
-      <Button
-        type="text"
-        icon={<CloseOutlined />}
-        onClick={() => setSelectedUser(null)}
-      />
+      <Flex align="center" gap={8}>
+        {canCall ? (
+          <Tooltip title={isOnline ? "Start video call" : "User is offline"}>
+            <Button
+              type="text"
+              disabled={!isOnline}
+              icon={<VideoCameraOutlined />}
+              onClick={() => startCall(selectedUser)}
+            />
+          </Tooltip>
+        ) : null}
+        <Button
+          type="text"
+          icon={<CloseOutlined />}
+          onClick={() => setSelectedUser(null)}
+        />
+      </Flex>
     </Flex>
   );
 };

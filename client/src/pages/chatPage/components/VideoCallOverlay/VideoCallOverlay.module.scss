@@ -1,0 +1,106 @@
+$overlayColor: #2c3640;
+$waitingBg: rgb(0 0 0 / 22%);
+$boxShadow: 0 24px 80px rgb(0 0 0 / 40%);
+$removeVideoBox: #172033;
+$statusColor: rgb(255 255 255 / 72%);
+$callSurfaceHeight: min(680px, calc(100vh - 48px));
+$callSurfaceWidth: min(920px, 100%);
+$localVideoWidth: min(220px, 34%);
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.callSurface {
+  width: $callSurfaceWidth;
+  height: $callSurfaceHeight;
+  border-radius: $border-radius-16;
+  background: $overlayColor;
+  box-shadow: $boxShadow;
+}
+
+.header {
+  min-height: $header-height;
+  padding: $gap-16;
+}
+
+.name {
+  color: $white;
+  font-size: $font-size-16;
+}
+
+.status {
+  color: $statusColor;
+}
+
+.prompt {
+  flex: 1;
+  gap: $gap-24;
+}
+
+.promptTitle {
+  margin: 0 !important;
+  color: $white !important;
+}
+
+.videoGrid {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: $black;
+}
+
+.remoteVideo {
+  width: $full-height-width;
+  height: $full-height-width;
+  object-fit: cover;
+  background: $removeVideoBox;
+}
+
+.localVideo {
+  position: absolute;
+  right: $gap-16;
+  bottom: $gap-16;
+  width: $localVideoWidth;
+  aspect-ratio: 16 / 10;
+  border: 2px solid $bg-secondary;
+  border-radius: $border-radius-12;
+  object-fit: cover;
+  background: $overlayColor;
+}
+
+.waiting {
+  position: absolute;
+  inset: 0;
+  background: $waitingBg;
+}
+
+.controls {
+  min-height: $header-height;
+  padding: $gap-16;
+}
+
+.disabledControl {
+  opacity: 0.48;
+}
+
+@media (max-width: $breakpoint-md) {
+  .overlay {
+    padding: 0;
+  }
+
+  .callSurface {
+    width: $full-height-width;
+    height: $full-height-width;
+    border-radius: 0;
+  }
+
+  .localVideo {
+    width: 38%;
+  }
+}
