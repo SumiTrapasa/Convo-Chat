@@ -134,6 +134,9 @@ export const useSendMessage = (receiverId: string) => {
       if (error || !isAIChat) {
         queryClient.invalidateQueries({ queryKey: ["messages", receiverId] });
       }
+      if (!error) {
+        queryClient.invalidateQueries({ queryKey: ["chats"] });
+      }
     },
   });
 };

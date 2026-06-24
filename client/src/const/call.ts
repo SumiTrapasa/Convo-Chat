@@ -25,6 +25,8 @@ export const CALL_SOCKET_EVENTS = {
   CALL_TIMEOUT: "video:call-timeout",
   WEBRTC_SIGNAL: "video:webrtc-signal",
   NEW_MESSAGE: "newMessage",
+  MESSAGE_READ: "messages_read",
+  MARK_MESSAGES_READ: "mark_messages_read",
 } as const;
 
 export const CALL_MESSAGE_STATUS = {

@@ -1,7 +1,7 @@
 import { BorderBeam, Button, Flex, Image, Typography, Spin } from "antd";
 import { VideoCameraOutlined } from "@ant-design/icons";
 import { Fragment, useEffect, useRef } from "react";
-import { useIsMutating, useQueryClient } from "@tanstack/react-query";
+import { useIsMutating } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useChatStore } from "@/store/useChatStore";
 import ChatLoadingSkeleton from "../ChatSkeletonLoading/ChatSkeletonLoading";
@@ -14,7 +14,8 @@ import {
   isJumboEmoji,
   isAIMessage as checkAI,
 } from "@/utils/chat";
-import { useMessages, useSendMessage } from "@/hooks/useChat"; // Corrected import
+import { useMessages, useSendMessage } from "@/hooks/useChat";
+
 import {
   COLORS,
   QUICK_MESSAGES,
@@ -23,17 +24,15 @@ import {
   AI_USER_PROFILE_PIC,
 } from "@/const/chat";
 import { MESSAGE_TYPE } from "@/const/call";
-import type { Message } from "@/types/chats";
 import { getCallLabel } from "@/utils/video";
 
 const ChatContent = () => {
-  const queryClient = useQueryClient();
-  const { selectedUser, subscribeToMessages, unsubscribeFromMessages } =
-    useChatStore();
+  const { selectedUser } = useChatStore();
 
   const { data: messages = [], isLoading: isMessagesLoading } = useMessages(
     selectedUser?._id,
   );
+
   const { mutate: sendMessage } = useSendMessage(selectedUser?._id || "");
 
   const { authUser } = useAuthStore();
@@ -45,18 +44,6 @@ const ChatContent = () => {
     useIsMutating({
       mutationKey: ["sendMessage", AI_USER_ID],
     }) > 0;
-
-  useEffect(() => {
-    subscribeToMessages((newMessage) => {
-      queryClient.setQueryData<Message[]>(
-        ["messages", selectedUser?._id],
-        (old = []) => [...old, newMessage],
-      );
-    });
-
-    // clean up
-    return () => unsubscribeFromMessages();
-  }, [selectedUser, subscribeToMessages, unsubscribeFromMessages, queryClient]);
 
   useEffect(() => {
     if (messageEndRef.current) {
@@ -162,9 +149,29 @@ const ChatContent = () => {
                       </Text>
                     )}
 
-                    <Text className={styles.time}>
-                      {formatTime(msg.createdAt)}
-                    </Text>
+                    {msg.image && msg.isOptimistic && (
+                      <Text
+                        italic
+                        type="secondary"
+                        className={styles.pendingMsg}
+                      >
+                        Sending…
+                      </Text>
+                    )}
+                    <Flex justify="flex-end" align="center" gap={8}>
+                      <Text className={styles.time}>
+                        {formatTime(msg.createdAt)}
+                      </Text>
+                      {isMine && (
+                        <Text
+                          className={
+                            msg.read ? styles.readStatus : styles.unreadStatus
+                          }
+                        >
+                          ✓✓
+                        </Text>
+                      )}
+                    </Flex>
                   </Flex>
 
                   {isMine && (

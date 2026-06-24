@@ -3,6 +3,11 @@ import { CALL_MESSAGE_STATUS, CALL_TYPE, MESSAGE_TYPE } from "../const/call.js";
 
 const messageSchema = new mongoose.Schema(
   {
+    read: {
+      type: Boolean,
+      default: false,
+    },
+
     senderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -47,8 +52,26 @@ const messageSchema = new mongoose.Schema(
       },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
+
+// Indexes
+messageSchema.index({
+  senderId: 1,
+  receiverId: 1,
+  createdAt: 1,
+});
+
+messageSchema.index({
+  senderId: 1,
+  receiverId: 1,
+  read: 1,
+});
+
+messageSchema.index({
+  receiverId: 1,
+  read: 1,
+});
 
 const Message = mongoose.model("Message", messageSchema);
 

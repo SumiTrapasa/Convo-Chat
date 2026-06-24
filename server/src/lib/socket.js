@@ -11,6 +11,7 @@ import {
   CALL_TYPE,
   MESSAGE_TYPE,
 } from "../const/call.js";
+import mongoose from "mongoose";
 
 const app = express();
 const server = http.createServer(app);
@@ -53,7 +54,10 @@ const getCallByUserId = (userId) => {
 const emitCallEndedToPeer = (userId, callId, endedBy) => {
   const peerSocketId = getReceiverSocketId(userId);
   if (peerSocketId) {
-    io.to(peerSocketId).emit(CALL_SOCKET_EVENTS.CALL_ENDED, { callId, endedBy });
+    io.to(peerSocketId).emit(CALL_SOCKET_EVENTS.CALL_ENDED, {
+      callId,
+      endedBy,
+    });
   }
 };
 
@@ -74,7 +78,10 @@ const saveCallMessage = async (call, status) => {
   try {
     const endedAt = new Date();
     const durationSeconds = call.acceptedAt
-      ? Math.max(0, Math.round((endedAt.getTime() - call.acceptedAt.getTime()) / 1000))
+      ? Math.max(
+          0,
+          Math.round((endedAt.getTime() - call.acceptedAt.getTime()) / 1000),
+        )
       : 0;
 
     const callMessage = await Message.create({
@@ -250,7 +257,9 @@ io.on("connection", (socket) => {
 
     finalizeCall(
       callId,
-      call.acceptedAt ? CALL_MESSAGE_STATUS.COMPLETED : CALL_MESSAGE_STATUS.MISSED,
+      call.acceptedAt
+        ? CALL_MESSAGE_STATUS.COMPLETED
+        : CALL_MESSAGE_STATUS.MISSED,
     );
 
     const peerId = call.callerId === userId ? call.receiverId : call.callerId;
@@ -284,7 +293,9 @@ io.on("connection", (socket) => {
       const peerId = call.callerId === userId ? call.receiverId : call.callerId;
       finalizeCall(
         callId,
-        call.acceptedAt ? CALL_MESSAGE_STATUS.COMPLETED : CALL_MESSAGE_STATUS.MISSED,
+        call.acceptedAt
+          ? CALL_MESSAGE_STATUS.COMPLETED
+          : CALL_MESSAGE_STATUS.MISSED,
       );
       emitCallEndedToPeer(peerId, callId, userId);
     }
@@ -292,6 +303,50 @@ io.on("connection", (socket) => {
     delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
+
+  socket.on(
+    CALL_SOCKET_EVENTS.MARK_MESSAGES_READ,
+    async ({ senderId, receiverId }) => {
+      try {
+        const unreadMessages = await Message.find({
+          senderId: new mongoose.Types.ObjectId(senderId),
+          receiverId: new mongoose.Types.ObjectId(receiverId),
+          read: false,
+        }).select("_id");
+
+        if (!unreadMessages.length) return;
+
+        const messageIds = unreadMessages.map((m) => m._id.toString());
+
+        // mark as read
+        await Message.updateMany(
+          {
+            senderId: new mongoose.Types.ObjectId(senderId),
+            receiverId: new mongoose.Types.ObjectId(receiverId),
+            read: false,
+          },
+          {
+            $set: {
+              read: true,
+              readAt: new Date(),
+            },
+          },
+        );
+
+        // notify sender in real-time
+        const senderSocketId = getReceiverSocketId(senderId);
+
+        if (senderSocketId) {
+          io.to(senderSocketId).emit(CALL_SOCKET_EVENTS.MESSAGE_READ, {
+            partnerId: receiverId,
+            messageIds,
+          });
+        }
+      } catch (err) {
+        console.error("mark_messages_read error:", err);
+      }
+    },
+  );
 });
 
 export { io, app, server };

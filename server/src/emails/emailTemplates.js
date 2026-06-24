@@ -30,7 +30,9 @@ export function createWelcomeEmailTemplate(name, clientURL) {
     
     <div style="font-size: 15px; color: #333333; line-height: 2;">
       • <strong style="color: #111111;">Set up your profile</strong> so friends recognize you.<br>
-      • <strong style="color: #111111;">Create a Group</strong> to coordinate your projects or hangouts.<br>
+      • <strong style="color: #111111;">Real-time Messaging</strong> — Send and receive messages instantly.<br>
+      • <strong style="color: #111111;">Image Sharing</strong> — Share photos and moments with ease.<br> 
+      • <strong style="color: #111111;">Video Calling</strong> — Connect face-to-face with high-quality video calls.<br>     
       • <strong style="color: #111111;">Enable Desktop Notifications</strong> so you never miss a ping.
     </div>
 

@@ -11,13 +11,23 @@ export interface Contact extends User {
 }
 
 export interface ChatPartner extends User {
-  lastMessage?: string;
+  lastMessage?: {
+    text?: string;
+    image?: string;
+    createdAt?: string;
+    messageType?: MessageType;
+    read?: boolean;
+    senderId?: string;
+  };
+  unreadCount?: number;
 }
 
 export interface Message {
   _id: string;
   senderId: string;
   receiverId: string;
+  read?: boolean;
+
   text?: string;
   image?: string;
   messageType?: MessageType;

@@ -59,6 +59,16 @@ $time-font-size: 11px;
   align-self: flex-end;
 }
 
+.readStatus {
+  color: $black;
+  font-size: $time-font-size;
+}
+
+.unreadStatus {
+  color: $time-text;
+  font-size: $time-font-size;
+}
+
 .noContent {
   flex: 1;
 }

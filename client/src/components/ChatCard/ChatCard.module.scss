@@ -1,3 +1,8 @@
+$time-font-size: 11px;
+
+.container {
+  flex: 1;
+}
 .chatCard :global(.ant-card-body) {
   padding: 0 !important;
   margin: $gap-12;
@@ -9,4 +14,14 @@
 
 .chatCard {
   border-radius: 0;
+}
+
+.readStatus {
+  color: $info-color;
+  font-size: $time-font-size;
+}
+
+.unreadStatus {
+  color: $text-secondary;
+  font-size: $time-font-size;
 }

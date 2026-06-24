@@ -1,6 +1,6 @@
 import { BorderBeam, Button, Flex, Radio, Skeleton, Tooltip } from "antd";
 import styles from "./ChatList.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatCard from "@/components/ChatCard/ChatCard";
 import { useChatStore } from "@/store/useChatStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -13,10 +13,20 @@ import {
   AI_USER_PROFILE_PIC,
 } from "@/const/chat";
 import { RobotOutlined } from "@ant-design/icons";
+import { useQueryClient } from "@tanstack/react-query";
+import type { Contact } from "@/types/chats";
 
 const ChatList = ({ onSelect }: { onSelect: () => void }) => {
   const [active, setActive] = useState<string>("Chats");
-  const { setSelectedUser } = useChatStore();
+  const queryClient = useQueryClient();
+
+  const {
+    selectedUser,
+    setSelectedUser,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+    markMessagesAsRead,
+  } = useChatStore();
   const { onlineUsers } = useAuthStore();
 
   const { data: chats = [], isLoading: isChatsLoading } = useChatPartners();
@@ -25,6 +35,21 @@ const ChatList = ({ onSelect }: { onSelect: () => void }) => {
 
   const isUsersLoading =
     active === "Chats" ? isChatsLoading : isContactsLoading;
+
+  useEffect(() => {
+    subscribeToMessages(queryClient);
+
+    // clean up
+    return () => unsubscribeFromMessages();
+  }, [selectedUser, subscribeToMessages, unsubscribeFromMessages, queryClient]);
+
+  const handleChatClick = (contact: Contact) => {
+    if (contact?._id) {
+      markMessagesAsRead(contact._id, queryClient);
+    }
+    setSelectedUser(contact);
+    onSelect();
+  };
 
   return (
     <Flex vertical gap={24} className={styles.chatListContainer}>
@@ -54,10 +79,9 @@ const ChatList = ({ onSelect }: { onSelect: () => void }) => {
                     name={chat.fullName}
                     profilePic={chat.profilePic}
                     isOnline={onlineUsers.includes(chat._id)}
-                    onClick={() => {
-                      setSelectedUser(chat);
-                      onSelect();
-                    }}
+                    unreadCount={chat.unreadCount}
+                    lastMessage={chat.lastMessage}
+                    onClick={() => handleChatClick(chat)}
                   />
                 ))
               ) : (
@@ -73,10 +97,7 @@ const ChatList = ({ onSelect }: { onSelect: () => void }) => {
                   name={contact.fullName}
                   profilePic={contact.profilePic}
                   isOnline={onlineUsers.includes(contact._id)}
-                  onClick={() => {
-                    setSelectedUser(contact);
-                    onSelect();
-                  }}
+                  onClick={() => handleChatClick(contact)}
                 />
               ))
             )}
