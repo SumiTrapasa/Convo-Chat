@@ -5,7 +5,7 @@ import { ENV } from "../lib/env.js";
 export const sendWelcomeEmail = async (email, name, clientURL) => {
   const { data, error } = await resendClient.emails.send({
     from: sender.email,
-    to: ENV.NODE_ENV === "development" ? receiver.email : email,
+    to: ENV.NODE_ENV === "production" ? email : receiver.email,
     subject: "Welcome to Convo!",
     html: createWelcomeEmailTemplate(name, clientURL),
   });
